@@ -10,7 +10,7 @@ enum class TokenType {
     COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR, COLON,
 
     NOT, NOT_EQUAL,
-    EQUAL, EQUAL_EQUAL,
+    EQUAL, EQUIVALENCE,
     GREATER, GREATER_EQUAL,
     LESS, LESS_EQUAL,
 
@@ -97,7 +97,7 @@ class Scanner(private val source: String) {
             }
 
             '!' -> addToken(if (match('=')) TokenType.NOT_EQUAL else TokenType.NOT)
-            '=' -> addToken(if (match('=')) TokenType.EQUAL_EQUAL else TokenType.EQUAL)
+            '=' -> addToken(if (match('=')) TokenType.EQUIVALENCE else TokenType.EQUAL)
             '<' -> addToken(if (match('=')) TokenType.LESS_EQUAL else TokenType.LESS)
             '>' -> addToken(if (match('=')) TokenType.GREATER_EQUAL else TokenType.GREATER)
 
