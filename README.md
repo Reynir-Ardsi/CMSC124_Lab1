@@ -1,6 +1,7 @@
 [HiliCodeNon]
+
 Creator
-[Your name]
+[Rainier RJ Espinal & Matthew Simpas]
 
 Language Overview
 [Provide a brief description of your programming language - what it's designed for, its main characteristics]
