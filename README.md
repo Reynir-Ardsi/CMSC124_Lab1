@@ -1,31 +1,87 @@
-[HiliCodeNon]
+Programming Language Name:
+HiliCodeNon
 
-Creator
-[Rainier RJ Espinal & Matthew Simpas]
+Creator:
+Rainier RJ Espinal & Matthew Simpas
 
-Language Overview
-[Provide a brief description of your programming language - what it's designed for, its main characteristics]
+Language Overview:
+HiliCodeNon is a programming language inspired by Python but designed with simplicity and localization in mind. Its main goal is to bring programming concepts closer to native Hiligaynon speakers by using familiar words while retaining a Python-like structure. It is beginner-friendly, easy to read, and encourages logical thinking through familiar syntax.
 
-Keywords
-[List all reserved words that cannot be used as identifiers - include the keyword and a brief description of its purpose]
+Keywords:
+"kag" = AND,
+"klase" = CLASS,
+"ang" = DEF,
+"teh" = ELSE,
+"sa" = CASE,
+"untat" = BREAK,
+"sige" = CONTINUE,
+"sala" = FALSE,
+"para" = FOR,
+"kundi" = ELIF,
+"kung" = IF,
+"ukon" = OR,
+"ipakita" = PRINT,
+"ibalik" = RETURN,
+"tisting" = TRY,
+"this" = CASE,
+"tuod" = TRUE,
+"samtang" = WHILE
 
-Operators
-[List all operators organized by category (arithmetic, comparison, logical, assignment, etc.)]
+Operators:
+Arithmetic Operators:
+“+” = addition
+“-” = subtraction
+“*” = multiplication
+“/” = division
+
+Comparison Operators:
+“==” = equivalence
+“!=” = not equal
+“>” = greater than
+“<” = less than
+“>=” = greater than or equal
+“<=” = less than or equal
+
+Logical Operators:
+“and” = logical AND
+“or” = logical OR
+“not” = logical NOT
+
+Assignment Operators:
+“=” = assign value
 
 Literals
-[Describe the format and syntax for each type of literal value (e.g., numbers, strings, characters, etc.) your language supports]
+Numbers: integers and floats (e.g., 123, 3.14)
+Strings: written double quotes ("text")
+Booleans: tuod (True), sala (False)
 
 Identifiers
-[Define the rules for valid identifiers (variable names, function names, etc.) and whether they are case-sensitive]
+Must begin with a letter or underscore (_)
+Can contain letters, digits, and underscores after the first character
+Case-sensitive
 
-Comments
-[Describe the syntax for comments and whether nested comments are supported]
+Comments:
+Single-line comments = // comment
+Multi-line comments = /* comment block */
+Nested comments = are not supported
 
-Syntax Style
-[Describe whether whitespace is significant, how statements are terminated, and what delimiters are used for blocks and grouping]
+Syntax Style:
+Whitespace (indentation) is significant, like Python
+Blocks are grouped by indentation
 
-Sample Code
-[Provide a few examples of valid code in your language to demonstrate the syntax and features]
+Sample Code:
+[ang switch()
+sa 1:
+kung(ikaw >18)]
+	ipakita(“minor”)
+	untat
+sa 2:
+kung(18 <= ikaw <= 19)
+ipakita(“teen”)
+untat
+sa 3:
+	kung(ikaw > 19)
+			ipakita(“oldie”)
 
 Design Rationale
 [Explain the reasoning behind your design choices]
