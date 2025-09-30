@@ -1,13 +1,17 @@
 Programming Language Name: 
+
 HiliCodeNon
 
 Creator:
+
 Rainier RJ Espinal & Matthew Simpas
 
 Language Overview:
+
 HiliCodeNon is a programming language inspired by Python but designed with simplicity and localization in mind. Its main goal is to bring programming concepts closer to native Hiligaynon speakers by using familiar words while retaining a Python-like structure. It is beginner-friendly, easy to read, and encourages logical thinking through familiar syntax.
 
 Keywords:
+
 "kag" = AND,
 "klase" = CLASS,
 "ang" = DEF,
@@ -28,6 +32,7 @@ Keywords:
 "samtang" = WHILE
 
 Operators:
+
 Arithmetic Operators:
 “+” = addition
 “-” = subtraction
@@ -50,26 +55,31 @@ Logical Operators:
 Assignment Operators:
 “=” = assign value
 
-Literals
+Literals:
+
 Numbers: integers and floats (e.g., 123, 3.14)
 Strings: written double quotes ("text")
 Booleans: tuod (True), sala (False)
 
-Identifiers
+Identifiers:
+
 Must begin with a letter or underscore (_)
 Can contain letters, digits, and underscores after the first character
 Case-sensitive
 
 Comments:
+
 Single-line comments = // comment
 Multi-line comments = /* comment block */
 Nested comments = are not supported
 
 Syntax Style:
+
 Whitespace (indentation) is significant, like Python
 Blocks are grouped by indentation
 
 Sample Code:
+
 [ang switch()
 sa 1:
 kung(ikaw >18)]
@@ -84,4 +94,5 @@ sa 3:
 			ipakita(“oldie”)
 
 Design Rationale
-[Explain the reasoning behind your design choices]
+
+The language uses Hiligaynon keywords to make programming feel more approachable for local speakers, while keeping the structure close to Python for readability and ease of learning. The design choices focus on simplicity, cultural connection, and reducing confusion by mapping each keyword to a familiar Hiligaynon word.
