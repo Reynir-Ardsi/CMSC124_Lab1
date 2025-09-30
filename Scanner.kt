@@ -1,43 +1,27 @@
 // Scanner.kt
-// A simple lexical scanner for a tiny dynamically-typed language (ktlox-like).
-// Features:
-// - Single-char tokens: ( ) { } , . - + ; * / etc.
-// - Multi-char operators: == != <= >=
-// - Strings with escapes: "..." supporting \n \t \\ \"
-// - Numbers: integers and decimals
-// - Identifiers and keywords (var, fun, if, else, true, false, nil, return, while, for)
-// - Comments: // single-line and /* block comment */
-// - Whitespace & line tracking
-// - Error reporting
-// - REPL that prints tokens
 
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-// ----------------------------- Token Types -----------------------------
-enum class TokenType {
-    // Single-character tokens.
-    LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE,
-    COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR,
 
-    // One or two character tokens.
-    BANG, BANG_EQUAL,
+enum class TokenType {
+
+    LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE,
+    COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR, COLON,
+
+    NOT, NOT_EQUAL,
     EQUAL, EQUAL_EQUAL,
     GREATER, GREATER_EQUAL,
     LESS, LESS_EQUAL,
 
-    // Literals.
     IDENTIFIER, STRING, NUMBER,
 
-    // Keywords.
-    AND, CLASS, ELSE, FALSE, FUN, FOR, IF, NIL, OR,
-    PRINT, RETURN, SUPER, THIS, TRUE, VAR, WHILE,
+    AND, CLASS, ELSE, FALSE, DEF, FOR, IF, OR, ELIF, CONTINUE,
+    PRINT, RETURN, TRY, CASE, TRUE, BREAK, WHILE,
 
-    // End of file.
     EOF
 }
 
-// ----------------------------- Token -----------------------------
 data class Token(
     val type: TokenType,
     val lexeme: String,
@@ -50,30 +34,31 @@ data class Token(
     }
 }
 
-// ----------------------------- Scanner -----------------------------
 class Scanner(private val source: String) {
     private val tokens = mutableListOf<Token>()
-    private var start = 0      // start index of current lexeme
-    private var current = 0    // current index in source
-    private var line = 1       // current line
+    private var start = 0
+    private var current = 0
+    private var line = 1
 
     private val keywords = mapOf(
-        "and" to TokenType.AND,
-        "class" to TokenType.CLASS,
-        "else" to TokenType.ELSE,
-        "false" to TokenType.FALSE,
-        "for" to TokenType.FOR,
-        "fun" to TokenType.FUN,
-        "if" to TokenType.IF,
-        "nil" to TokenType.NIL,
-        "or" to TokenType.OR,
-        "print" to TokenType.PRINT,
-        "return" to TokenType.RETURN,
-        "super" to TokenType.SUPER,
-        "this" to TokenType.THIS,
-        "true" to TokenType.TRUE,
-        "var" to TokenType.VAR,
-        "while" to TokenType.WHILE
+        "kag" to TokenType.AND,
+        "klase" to TokenType.CLASS,
+        "ang" to TokenType.DEF,
+        "teh" to TokenType.ELSE,
+        "sa" to TokenType.CASE,
+        "untat" to TokenType.BREAK,
+        "sige" to TokenType.CONTINUE,
+        "sala" to TokenType.FALSE,
+        "para" to TokenType.FOR,
+        "kundi" to TokenType.ELIF,
+        "kung" to TokenType.IF,
+        "ukon" to TokenType.OR,
+        "ipakita" to TokenType.PRINT,
+        "ibalik" to TokenType.RETURN,
+        "tisting" to TokenType.TRY,
+        "this" to TokenType.CASE,
+        "tuod" to TokenType.TRUE,
+        "samtang" to TokenType.WHILE
     )
 
     fun scanTokens(): List<Token> {
@@ -98,31 +83,27 @@ class Scanner(private val source: String) {
             '+' -> addToken(TokenType.PLUS)
             ';' -> addToken(TokenType.SEMICOLON)
             '*' -> addToken(TokenType.STAR)
+            ':' -> addToken(TokenType.COLON)
 
-            // Slash may start comment or be division operator
             '/' -> {
                 if (match('/')) {
-                    // Single-line comment: consume until end of line
                     while (peek() != '\n' && !isAtEnd()) advance()
                 } else if (match('*')) {
-                    // Block comment: /* ... */ (non-nested)
+
                     blockComment()
                 } else {
                     addToken(TokenType.SLASH)
                 }
             }
 
-            // One or two char tokens
-            '!' -> addToken(if (match('=')) TokenType.BANG_EQUAL else TokenType.BANG)
+            '!' -> addToken(if (match('=')) TokenType.NOT_EQUAL else TokenType.NOT)
             '=' -> addToken(if (match('=')) TokenType.EQUAL_EQUAL else TokenType.EQUAL)
             '<' -> addToken(if (match('=')) TokenType.LESS_EQUAL else TokenType.LESS)
             '>' -> addToken(if (match('=')) TokenType.GREATER_EQUAL else TokenType.GREATER)
 
-            // Whitespace
             ' ', '\r', '\t' -> { /* ignore */ }
             '\n' -> line++
-
-            // Strings
+            
             '"' -> string()
 
             else -> {
@@ -135,7 +116,6 @@ class Scanner(private val source: String) {
         }
     }
 
-    // ---------- helpers ----------
     private fun isAtEnd(): Boolean = current >= source.length
     private fun advance(): Char = source[current++]
     private fun peek(): Char = if (isAtEnd()) '\u0000' else source[current]
@@ -152,13 +132,12 @@ class Scanner(private val source: String) {
         tokens.add(Token(type, text, literal, line))
     }
 
-    // ---------- literals ----------
     private fun string() {
         val sb = StringBuilder()
         while (peek() != '"' && !isAtEnd()) {
-            if (peek() == '\n') line++ // allow multi-line strings
-            if (peek() == '\\') { // escape sequence
-                advance() // consume '\'
+            if (peek() == '\n') line++
+            if (peek() == '\\') {
+                advance()
                 val esc = if (isAtEnd()) {
                     error("Unfinished escape sequence in string at line $line")
                     return
@@ -170,7 +149,6 @@ class Scanner(private val source: String) {
                     '\\' -> sb.append('\\')
                     '"' -> sb.append('"')
                     else -> {
-                        // Unrecognized escape: keep the char (tolerant)
                         sb.append(esc)
                     }
                 }
@@ -184,18 +162,15 @@ class Scanner(private val source: String) {
             return
         }
 
-        advance() // closing "
-        // lexeme includes the quotes; literal is parsed content
+        advance()
         addToken(TokenType.STRING, sb.toString())
     }
 
     private fun number() {
-        // integer part
         while (isDigit(peek())) advance()
 
-        // fractional part
+
         if (peek() == '.' && isDigit(peekNext())) {
-            // consume '.'
             advance()
             while (isDigit(peek())) advance()
         }
@@ -218,11 +193,9 @@ class Scanner(private val source: String) {
         addToken(type)
     }
 
-    // Block comment: consume until '*/' or EOF. Non-nested.
     private fun blockComment() {
         while (!isAtEnd()) {
             if (peek() == '*' && peekNext() == '/') {
-                // consume '*/'
                 advance()
                 advance()
                 return
@@ -230,46 +203,27 @@ class Scanner(private val source: String) {
             if (peek() == '\n') line++
             advance()
         }
-        // unterminated block comment: report error but continue scanning
         error("Unterminated block comment (/*) starting at line $line")
     }
 
-    // ---------- char classification ----------
     private fun isDigit(c: Char) = c in '0'..'9'
     private fun isAlpha(c: Char) = c == '_' || c in 'a'..'z' || c in 'A'..'Z'
     private fun isAlphaNumeric(c: Char) = isAlpha(c) || isDigit(c)
 
-    // ---------- error handling ----------
     private fun error(message: String) {
         System.err.println("[Line $line] Error: $message")
     }
 }
 
-// ----------------------------- REPL / Main -----------------------------
 fun main() {
     val reader = BufferedReader(InputStreamReader(System.`in`))
-    println("ktlox scanner REPL — type a line to scan, or 'exit' to quit")
+    println("HiliCodenon Scanner, type a line to scan, or 'exit' to quit")
     while (true) {
         print("> ")
         val line = reader.readLine() ?: break
         if (line.trim().lowercase() == "exit") break
-        // For multi-line convenience: allow the user to enter multiple lines ended by blank line
-        // but for simplicity here we scan single-line input.
         val scanner = Scanner(line)
         val tokens = scanner.scanTokens()
         tokens.forEach { println(it) }
     }
-
-    // Example quick run (uncomment to auto-run examples when executing directly):
-    /*
-    val example = """
-        var someString = "I am scanning\nand this is a second line"
-        var someNumber = 3.1415 + 6.9420
-        // this is a comment
-        var parenthesizedEquation = (1 + 3) - (2 * 5)
-        /* block comment */
-    """.trimIndent()
-    println("---- Example scan ----")
-    Scanner(example).scanTokens().forEach { println(it) }
-    */
 }
