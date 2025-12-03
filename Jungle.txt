@@ -1,0 +1,26 @@
+buy gold = 0;
+buy creep_hp = 300;
+buy hits = 0;
+
+chat_wheel "Entering the Jungle...";
+
+// Farm Loop: Hits creeps until they die
+farm (creep_hp > 0) {
+hits = hits + 1;
+creep_hp = creep_hp - 50;
+
+chat_wheel "Hit " + hits + "! Creep HP: " + creep_hp;
+
+ward (creep_hp <= 0) {
+    gold = gold + 100;
+    chat_wheel "Camp cleared! Gold earned: " + gold;
+}
+
+
+}
+
+// Nested Loop Logic check
+ward (gold >= 100) {
+chat_wheel "Buying Midas...";
+buy midas_cd = 0;
+}

@@ -1,0 +1,31 @@
+buy mana_pool = 500;
+buy p1_mana = 500; // Required for engine mana check
+
+// Define spells
+invoke SunStrike() [mana: 100, cd: 5] {
+chat_wheel "Exort! SunStrike cast.";
+p1_mana = p1_mana - 100;
+}
+
+invoke ColdSnap() [mana: 50, cd: 2] {
+chat_wheel "Quas! ColdSnap cast.";
+p1_mana = p1_mana - 50;
+}
+
+invoke Meteor() [mana: 200, cd: 10] {
+chat_wheel "Exort! Chaos Meteor cast.";
+p1_mana = p1_mana - 200;
+}
+
+chat_wheel "--- INVOKER COMBO STARTED ---";
+
+// Cast sequence
+SunStrike();
+ColdSnap();
+Meteor();
+
+// Try to cast SunStrike again immediately (Should fail due to Cooldown)
+chat_wheel "--- ATTEMPTING RAPID CAST ---";
+SunStrike();
+
+chat_wheel "--- MANA REMAINING: " + p1_mana;
