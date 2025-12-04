@@ -1,0 +1,52 @@
+buy my_hp = 600.0;
+buy enemy_hp = 600.0;
+buy my_mana = 300.0;
+buy creeps_killed = 0.0;
+buy lane_active = 1.0;
+
+invoke Harass() [mana: 50, cd: 2] {
+chat_wheel " > Casting Frost Arrow!";
+enemy_hp = enemy_hp - 45.0;
+my_mana = my_mana - 50.0;
+}
+
+invoke EatTango() [mana: 0, cd: 0] {
+ward (my_hp < 400.0) {
+chat_wheel " > Eating Tango (Regen)";
+my_hp = my_hp + 115.0;
+}
+}
+
+chat_wheel "Minions have spawned!";
+
+farm (lane_active == 1.0) {
+
+creeps_killed = creeps_killed + 1.0;
+
+ward (my_mana >= 50.0) {
+    Harass();
+}
+
+EatTango();
+
+ward (creeps_killed == 5.0 or creeps_killed == 10.0) {
+    chat_wheel "CS: " + creeps_killed + " | Enemy HP: " + enemy_hp;
+}
+
+ward (enemy_hp <= 0) {
+    chat_wheel ">>> FIRST BLOOD! Enemy Eliminated. <<<";
+    lane_active = 0.0;
+}
+
+ward (my_hp <= 0) {
+    chat_wheel ">>> YOU DIED. <<<";
+    lane_active = 0.0;
+}
+
+ward (creeps_killed >= 15.0) {
+    chat_wheel "Laning phase over. Rotation time.";
+    lane_active = 0.0;
+}
+
+
+}

@@ -1,5 +1,7 @@
+import java.util.concurrent.ConcurrentHashMap
+
 class Environment(val enclosing: Environment? = null) {
-    private val values = mutableMapOf<String, Any?>()
+    private val values = ConcurrentHashMap<String, Any?>()
 
     fun define(name: String, value: Any?) {
         values[name] = value
@@ -27,5 +29,11 @@ class Environment(val enclosing: Environment? = null) {
         }
 
         throw RuntimeError(name, "Invalid Target: '${name.lexeme}' not found.")
+    }
+
+    fun get(name: String): Any? {
+        if (values.containsKey(name)) return values[name]
+        if (enclosing != null) return enclosing.get(name)
+        return null
     }
 }

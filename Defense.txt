@@ -3,21 +3,17 @@ buy enemy_near = 1;
 buy fortification_ready = 1;
 
 chat_wheel "--- TOWER UNDER ATTACK ---";
-
 ward (enemy_near == 1) {
 
-// Simulate damage
 tower_hp = tower_hp - 100;
 chat_wheel "Tower hit! HP: " + tower_hp;
-
-// Check critical threshold
 ward (tower_hp < 450) {
 
     ward (fortification_ready == 1) {
         chat_wheel " > FORTIFICATION ACTIVATED!";
         fortification_ready = 0;
-        // Native function call
-        print("System: Structures are invulnerable.");
+        // Native function call fixed
+        chat_wheel "System: Structures are invulnerable.";
     } gank {
         chat_wheel " > Fortification is on cooldown!";
     }

@@ -1,0 +1,9 @@
+buy string1 = "string";
+buy string2 = " ";
+
+chat_wheel string2;
+
+string1[1] = "k";
+string2 = string1;
+
+chat_wheel string2;

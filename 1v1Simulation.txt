@@ -1,16 +1,11 @@
-// === BATTLESCRIPT 1v1 MIDLANE SIMULATION ===
-
-// 1. GLOBAL STATE
 buy game_over = 0;
 buy tick = 0;
 buy active_rune = 0;
 
-// 2. PLAYER 1 SETUP (Radiant: Zeus)
 buy p1_name = "Zeus";
 buy p1_str = 19;
 buy p1_int = 30;
 
-// Stat Derivation (DOTA2 Logic)
 buy p1_hp = p1_str * 20;
 buy p1_max_hp = p1_hp;
 buy p1_mana = p1_int * 12; // Engine looks for 'p1_mana' specifically
@@ -18,7 +13,6 @@ buy p1_max_mana = p1_mana;
 buy p1_deaths = 0;
 buy p1_tower = 1500;
 
-// 3. PLAYER 2 SETUP (Dire: Shadow Fiend Bot)
 buy p2_name = "SF_Bot";
 buy p2_hp = 800;
 buy p2_tower = 1500;
@@ -27,21 +21,16 @@ buy p2_deaths = 0;
 chat_wheel ">>> DRAFT PHASE COMPLETE";
 chat_wheel ">>> " + p1_name + " (HP: " + p1_hp + ") VS " + p2_name + " (HP: " + p2_hp + ")";
 
-// 4. ABILITIES
-
-// Zeus Arc Lightning: Low CD, Low Cost
 invoke ArcLightning() [mana: 80, cd: 2] {
 buy dmg = 140;
 chat_wheel "CAST > Arc Lightning! Zaps enemy for " + dmg;
 p2_hp = p2_hp - dmg;
 
-// Manual Mana Depletion (Engine handles the check, Script handles the cost)
 p1_mana = p1_mana - 80;
 
 
 }
 
-// Zeus Thundergod's Wrath: High CD, High Cost
 invoke Ult() [mana: 300, cd: 10] {
 buy dmg = 450;
 chat_wheel "CAST > THUNDERGOD'S WRATH! BOOM!";
@@ -49,21 +38,18 @@ p2_hp = p2_hp - dmg;
 p1_mana = p1_mana - 300;
 }
 
-// Enemy Bot Logic (Simulated)
 invoke BotAttack() [mana:0, cd: 3] {
 buy dmg = 100;
 chat_wheel "ENEMY > Shadowraze hits you for " + dmg;
 p1_hp = p1_hp - dmg;
-p1_tower = p1_tower - 20; // Creep chip damage
+p1_tower = p1_tower - 20;
 }
 
-// 5. GAME LOOP
 chat_wheel "=== MATCH STARTED ===";
 
 farm (game_over == 0) {
 chat_wheel "--- Tick " + tick + " ---";
 
-// A. Rune Spawning Logic (Every 5 ticks)
 ward (tick == 5) {
     active_rune = spawn_rune(); // Native Call
 
@@ -76,31 +62,26 @@ ward (tick == 5) {
     ward (active_rune == 3) { chat_wheel ">>> ARCANE RUNE (CD Reduction)"; }
 }
 
-// B. Player Logic (Try to cast spells)
-// The Engine will block these if on CD or Out of Mana
 ArcLightning();
 Ult();
 
-// C. Bot Logic
 ward (p2_hp > 0) {
     BotAttack();
 }
 
-// D. Death Checks
 ward (p1_hp <= 0) {
     chat_wheel "☠️ " + p1_name + " HAS DIED!";
     p1_deaths = p1_deaths + 1;
-    p1_hp = p1_max_hp; // Respawn
+    p1_hp = p1_max_hp;
     p1_mana = p1_max_mana;
 }
 
 ward (p2_hp <= 0) {
     chat_wheel "☠️ " + p2_name + " HAS DIED!";
     p2_deaths = p2_deaths + 1;
-    p2_hp = 800; // Respawn
+    p2_hp = 800;
 }
 
-// E. Win Conditions
 ward (p1_deaths >= 2) {
     chat_wheel "DIRE VICTORY (2 Kills)";
     game_over = 1;
@@ -114,7 +95,6 @@ ward (p1_tower <= 0) {
     game_over = 1;
 }
 
-// Advance Time
 tick = tick + 1;
 ward (tick > 20) {
     chat_wheel "TIME LIMIT REACHED - DRAW";

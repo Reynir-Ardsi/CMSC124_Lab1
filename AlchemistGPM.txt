@@ -1,0 +1,45 @@
+buy total_gold = 600.0;
+buy greed_stacks = 0.0;
+buy max_greed_bonus = 24.0;
+buy base_creep_value = 35.0;
+
+chat_wheel ">>> ALCHEMIST SIMULATION START <<<";
+
+cycle (buy min = 1.0; min <= 10.0; min = min + 1.0) {
+
+chat_wheel "--- Minute " + min + " ---";
+buy minute_gold = 0.0;
+
+cycle (buy wave = 1.0; wave <= 2.0; wave = wave + 1.0) {
+
+    cycle (buy creep = 1.0; creep <= 4.0; creep = creep + 1.0) {
+
+        greed_stacks = greed_stacks + 3.0;
+        ward (greed_stacks > max_greed_bonus) {
+            greed_stacks = max_greed_bonus;
+        }
+
+        buy kill_gold = base_creep_value + greed_stacks;
+        ward (random_proc(15.0)) {
+            kill_gold = kill_gold * 2.0; // 2x gold proc
+        }
+
+        minute_gold = minute_gold + kill_gold;
+    }
+}
+
+minute_gold = minute_gold + 100.0;
+
+ward (min == 3.0 or min == 6.0 or min == 9.0) {
+    minute_gold = minute_gold + 150.0;
+    chat_wheel " > Picked up Bounty Rune!";
+}
+
+total_gold = total_gold + minute_gold;
+chat_wheel "Minute Gold: " + minute_gold + " | Total Networth: " + total_gold;
+
+
+}
+
+buy gpm = total_gold / 10.0;
+chat_wheel ">>> SIMULATION END. Final GPM: " + gpm;
